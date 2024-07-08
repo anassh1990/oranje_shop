@@ -32,6 +32,7 @@ class User(BaseModel):
     fname: str
     lname: str
     email: str
+    is_admin: bool
     class Config():
         orm_mode = True
 
@@ -76,7 +77,7 @@ class ProductDisplay(BaseModel):
     status : int
     is_activate : bool
     category_of_product : Category
-    #seller_of_product : User
+    seller_of_product : User
     creation_timestamp: datetime
     updated_status_timestamp: datetime
     class Config():
