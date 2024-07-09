@@ -49,7 +49,8 @@ def update_user(db: Session, id: int, request: UserBase):
         DbUser.password: Hash.bcrypt(request.password)
     })
     db.commit()
-    return 'User data updated!'
+    raise HTTPException(status_code=status.HTTP_200_OK,
+                            detail= f'User with id {id} has been updated')
 
 def delete_user(db: Session, id: int):
     user = db.query(DbUser).filter(DbUser.id == id).first()
