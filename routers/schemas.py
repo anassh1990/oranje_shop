@@ -101,3 +101,7 @@ class UserDisplay(BaseModel):
     prod_items: List [Product] = []
     class Config():
         orm_mode = True
+
+class UserAuth(BaseModel):
+    id: int
+    email: str

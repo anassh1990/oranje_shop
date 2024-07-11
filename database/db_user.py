@@ -37,7 +37,11 @@ def get_user_by_username(db:Session, username: str):
                             detail= f'User with username {username} not found')
     return user 
 
-def update_user(db: Session, id: int, request: UserBase):
+def update_user(db: Session, id: int, request: UserBase, current_user: UserBase):
+    if id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="You are not authorized to update this profile")
+
     user = db.query(DbUser).filter(DbUser.id == id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
