@@ -13,7 +13,9 @@ def create_user(db: Session, request: UserBase):
         email = request.email,
         password = Hash.bcrypt(request.password), # we need to encyrpt the password
         is_admin = request.is_admin,
-        creation_timestamp = datetime.datetime.now()
+        is_activate = request.is_activate,
+        creation_timestamp = datetime.datetime.now(),
+        updated_timestamp = datetime.datetime.now()
     )
     db.add(new_user)
     db.commit()

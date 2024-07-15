@@ -25,7 +25,7 @@ def update(request: CategoryBase, db: Session = Depends(get_db)):
 def categories(db: Session = Depends(get_db)):
     return db_category.get_all(db)
 
-@router.get('/item/{id}', response_model= CategoryDisplay)
+@router.get('/item/{id}')#, response_model= CategoryDisplay)
 def get_item(id: int, db: Session = Depends(get_db)):
     return db_category.get_item(id, db)
 

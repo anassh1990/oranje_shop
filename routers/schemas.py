@@ -10,7 +10,6 @@ class Category(BaseModel):
     parent_cat_id : int
     admin_id : int
     is_activate : bool
-    creation_timestamp: datetime
     class Config():
         orm_mode = True
 
@@ -26,7 +25,7 @@ class Product(BaseModel):
     class Config():
         orm_mode = True
 
-#Product inside ProductDisplay
+#User inside ProductDisplay(seller), CategoryDisplay(owner_admin)
 class User(BaseModel):
     id: int
     fname: str
@@ -36,26 +35,29 @@ class User(BaseModel):
     class Config():
         orm_mode = True
 
+#Schema of creating Category or SubCategory
 class CategoryBase(BaseModel):
     name : str
     image_url : str
     parent_cat_id : int
     admin_id : int
-    is_activate: bool
+    is_activate: bool = True
 
 class CategoryDisplay(BaseModel):
     id: int
     name : str
     image_url : str
     creation_timestamp: datetime
+    updated_timestamp: datetime
     parent_cat_id: int
     is_activate: bool
     sub_cat_items: List[Category] = []
     prod_items: List [Product] = []
-    admin_id : int
+    owner_admin : User
     class Config():
         orm_mode = True
 
+#Schema of creating Product
 class ProductBase(BaseModel):
     name : str
     image_url : str
@@ -63,9 +65,9 @@ class ProductBase(BaseModel):
     price : float
     quantity : int
     status : int
-    is_activate : bool
+    is_activate : bool = True
     cat_id : int
-    seller_id : int
+    seller_id : int #Owner of the product
 
 class ProductDisplay(BaseModel):
     id: int
@@ -75,7 +77,7 @@ class ProductDisplay(BaseModel):
     price : float
     quantity : int
     status : int
-    is_activate : bool
+    is_activate : bool 
     category_of_product : Category
     seller_of_product : User
     creation_timestamp: datetime
@@ -83,12 +85,14 @@ class ProductDisplay(BaseModel):
     class Config():
         orm_mode = True
 
+#Schema of creating User
 class UserBase(BaseModel):
     fname: str
     lname: str
     email: str
     password: str
-    is_admin: bool= False
+    is_admin: bool = False
+    is_activate: bool = True
 
 class UserDisplay(BaseModel):
     id: int
@@ -97,7 +101,63 @@ class UserDisplay(BaseModel):
     email: str
     password: str
     is_admin: bool
+    is_activate: bool
     creation_timestamp: datetime
+    updated_timestamp: datetime
     prod_items: List [Product] = []
     class Config():
         orm_mode = True
+
+#Schema of creating Order
+class OrderBase(BaseModel):
+    buyer_id: int
+    product_id: int
+    status: int
+    quantity: int
+    invoice_id: int
+    is_activate: bool = True
+
+#Order inside User, Invoice (User Orders- Invoice Orders)
+#class Order(BaseModel):
+#    id: int
+#    ordered_product: Product
+
+
+class Invoice(BaseModel):
+    id: int
+    creation_timestamp: datetime
+    updated_timestamp: datetime
+    payment_mehtod: int #0: Paybal, 1: DebitCard, 2: CreditCard..
+    total_price: float
+    barcode_url: str
+
+class OrderDisplay(BaseModel):
+    id: int
+    status: int
+    quantity: int
+    total_price: float
+    creation_timestamp: datetime
+    updated_timestamp: datetime
+    updated_status_timestamp: datetime
+    buyer_of_product: User
+    ordered_product: Product
+    related_invoice: Invoice
+    is_activate: bool
+    class Config():
+        orm_mode = True
+
+class InvoiceBase(BaseModel):
+    payment_mehtod: int #0: Paybal, 1: DebitCard, 2: CreditCard..
+
+class InvoiceDisplay(BaseModel):
+    id: int
+    creation_timestamp: datetime
+    updated_timestamp: datetime
+    payment_mehtod: int #0: Paybal, 1: DebitCard, 2: CreditCard..
+    total_price: float
+    barcode_url: str
+    products_per_invoice: List[OrderDisplay]
+    class Config():
+        orm_mode = True
+
+

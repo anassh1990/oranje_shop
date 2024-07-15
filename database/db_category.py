@@ -12,7 +12,8 @@ def create(db: Session, request: CategoryBase):
         parent_cat_id = request.parent_cat_id,
         is_activate = request.is_activate,
         admin_id = request.admin_id,
-        creation_timestamp = datetime.datetime.now()
+        creation_timestamp = datetime.datetime.now(),
+        updated_timestamp = datetime.datetime.now()
     )
     db.add(new_category)
     db.commit()
@@ -42,9 +43,11 @@ def update(db:Session, id: int, request: CategoryBase):
     return 'ok'
 
 def delete(id: int, db: Session):
-    cat = db.query(DbCategory).filter(DbCategory.id == id).first()
-    if not cat:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f'Category with id {id} was not found.')
-    db.delete(cat)
-    db.commit()
-    return 'ok'
+    try:
+        cat = db.query(DbCategory).filter(DbCategory.id == id).first()
+        db.delete(cat)
+        db.commit()
+        return 'ok'
+    except:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = f'Category with id {id} was not found.')
+
