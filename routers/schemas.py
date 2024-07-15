@@ -159,5 +159,7 @@ class InvoiceDisplay(BaseModel):
     products_per_invoice: List[OrderDisplay]
     class Config():
         orm_mode = True
-
-
+ 
+class UserAuth(BaseModel):
+    id: int
+    email: str

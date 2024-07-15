@@ -12,11 +12,6 @@ app.include_router(category.router)
 app.include_router(product.router)
 app.include_router(user.router)
 app.include_router(authentication.router)
-<<<<<<< HEAD
 app.include_router(order.router)
-=======
->>>>>>> 574b2e6a52f5f554a7e27407ca452bfb02315baa
-
 models.Base.metadata.create_all(engine)
-
 app.mount('/images', StaticFiles(directory='images'), name='images')
