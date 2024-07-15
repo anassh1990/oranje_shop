@@ -39,7 +39,11 @@ def get_user_by_username(db:Session, username: str):
                             detail= f'User with username {username} not found')
     return user 
 
-def update_user(db: Session, id: int, request: UserBase):
+def update_user(db: Session, id: int, request: UserBase, current_user: UserBase):
+    if id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="You are not authorized to update this profile")
+
     user = db.query(DbUser).filter(DbUser.id == id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -51,7 +55,8 @@ def update_user(db: Session, id: int, request: UserBase):
         DbUser.password: Hash.bcrypt(request.password)
     })
     db.commit()
-    return 'User data updated!'
+    raise HTTPException(status_code=status.HTTP_200_OK,
+                            detail= f'User with id {id} has been updated')
 
 def delete_user(db: Session, id: int):
     user = db.query(DbUser).filter(DbUser.id == id).first()
@@ -60,4 +65,5 @@ def delete_user(db: Session, id: int):
                             detail= f'User with id {id} not found')
     db.delete(user)
     db.commit()
-    return 'User deleted!'
+    raise HTTPException(status_code=status.HTTP_200_OK,
+                            detail= f'User with id {id} has been deleted')
