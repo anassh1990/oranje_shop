@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -53,7 +53,7 @@ class CategoryDisplay(BaseModel):
     is_activate: bool
     sub_cat_items: List[Category] = []
     prod_items: List [Product] = []
-    owner_admin : User
+    owner_admin : Optional[User] = None
     class Config():
         orm_mode = True
 
@@ -68,6 +68,7 @@ class ProductBase(BaseModel):
     is_activate : bool = True
     cat_id : int
     seller_id : int #Owner of the product
+    location: str # to include location information
 
 class ProductDisplay(BaseModel):
     id: int
@@ -78,8 +79,9 @@ class ProductDisplay(BaseModel):
     quantity : int
     status : int
     is_activate : bool 
-    category_of_product : Category
-    seller_of_product : User
+    category_of_product : Optional[Category] = None
+    seller_of_product : Optional[User] = None
+    location: Optional[str] = '' # to show location information
     creation_timestamp: datetime
     updated_status_timestamp: datetime
     class Config():
