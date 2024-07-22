@@ -81,7 +81,7 @@ class ProductDisplay(BaseModel):
     is_activate : bool 
     category_of_product : Optional[Category] = None
     seller_of_product : Optional[User] = None
-    location: Optional[str] = '' # to show location information
+    location: Optional[str] = 'Unknown' # to show location information
     creation_timestamp: datetime
     updated_status_timestamp: datetime
     class Config():

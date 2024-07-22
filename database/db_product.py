@@ -15,6 +15,7 @@ def create(db: Session, request: ProductBase):
         is_activate = request.is_activate,
         cat_id = request.cat_id,
         seller_id = request.seller_id,
+        location = request.location or 'Unknown',
         updated_status_timestamp = datetime.datetime.now(),
         creation_timestamp = datetime.datetime.now()
     )
