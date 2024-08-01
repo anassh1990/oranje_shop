@@ -82,7 +82,7 @@ class DbInvoice(Base):
     payment_mehtod = Column(Integer)#0: Paybal, 1: DebitCard, 2: CreditCard..
     total_price = Column(Float)
     barcode_url = Column(String)
-    products_per_invoice = Relationship('DbOrder', back_populates='related_invoice')
+    products_per_invoice = Relationship('DbOrder', cascade = "all,delete", back_populates='related_invoice')
 
 class DbMessage(Base):
     __tablename__ = "message"
@@ -95,3 +95,4 @@ class DbMessage(Base):
     msg_status = Column(Integer) #0: sent, 1: received, 2: read, 3: deleted
     creation_timestamp = Column(DateTime)
     updated_timestamp = Column(DateTime)
+    updated_status_timestamp = Column(DateTime)

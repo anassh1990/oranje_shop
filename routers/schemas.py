@@ -11,7 +11,7 @@ class Category(BaseModel):
     admin_id : int
     is_activate : bool
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 #Product inside CategoryDisplay
 class Product(BaseModel):
@@ -23,7 +23,7 @@ class Product(BaseModel):
     status : int
     is_activate : bool
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 #User inside ProductDisplay(seller), CategoryDisplay(owner_admin)
 class User(BaseModel):
@@ -33,7 +33,7 @@ class User(BaseModel):
     email: str
     is_admin: bool
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 #Schema of creating Category or SubCategory
 class CategoryBase(BaseModel):
@@ -55,7 +55,7 @@ class CategoryDisplay(BaseModel):
     prod_items: List [Product] = []
     owner_admin : User
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 #Schema of creating Product
 class ProductBase(BaseModel):
@@ -83,7 +83,7 @@ class ProductDisplay(BaseModel):
     creation_timestamp: datetime
     updated_status_timestamp: datetime
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 #Schema of creating User
 class UserBase(BaseModel):
@@ -106,11 +106,11 @@ class UserDisplay(BaseModel):
     updated_timestamp: datetime
     prod_items: List [Product] = []
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 #Schema of creating Order
 class OrderBase(BaseModel):
-    buyer_id: int
+    #buyer_id: int
     product_id: int
     status: int
     quantity: int
@@ -144,10 +144,12 @@ class OrderDisplay(BaseModel):
     related_invoice: Invoice
     is_activate: bool
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 class InvoiceBase(BaseModel):
     payment_mehtod: int #0: Paybal, 1: DebitCard, 2: CreditCard..
+    total_price: float
+    barcode_url: str
 
 class InvoiceDisplay(BaseModel):
     id: int
@@ -158,8 +160,24 @@ class InvoiceDisplay(BaseModel):
     barcode_url: str
     products_per_invoice: List[OrderDisplay]
     class Config():
-        orm_mode = True
+        from_attributes = True
  
 class UserAuth(BaseModel):
     id: int
     email: str
+
+class MessageBase(BaseModel):
+    #sender_id: int
+    receiver_id: int
+    msg_txt: str
+    msg_status: int
+
+class MessageDisplay(BaseModel):
+    id: int
+    sender: User
+    receiver: User
+    msg_txt: str
+    msg_status: int
+    creation_timestamp: datetime
+    updated_timestamp: datetime
+    updated_status_timestamp: datetime

@@ -1,6 +1,10 @@
 from fastapi import HTTPException, status
-from routers.schemas import ProductBase
+from sqlalchemy import null
+from routers.schemas import ProductBase, ProductDisplay
 from sqlalchemy.orm.session import Session
+from fastapi_pagination import Page, add_pagination, paginate
+from sqlalchemy import select
+from fastapi_pagination.ext.sqlalchemy import paginate
 import datetime
 from database.models import DbProduct
 
@@ -23,8 +27,19 @@ def create(db: Session, request: ProductBase):
     db.refresh(new_product)
     return new_product
 
-def get_all(db: Session):
-    return db.query(DbProduct).all()
+def get_all(db: Session) -> Page[ProductDisplay]:
+    #return paginate(db.query(DbProduct).order_by(DbProduct.creation_timestamp).all())
+    return paginate(db, select(DbProduct).order_by(DbProduct.creation_timestamp))
+
+def get_item(id: int, db: Session):
+    try:
+        product = db.query(DbProduct).filter(DbProduct.id == id).first()
+        if product:
+            return product
+        else:
+             raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f'Product with id {id} was not found.')
+    except:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f'Product with id {id} was not found.')
 
 def delete(id: int, db: Session):
     product = db.query(DbProduct).filter(DbProduct.id == id).first()

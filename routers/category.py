@@ -13,23 +13,23 @@ router = APIRouter(
     tags=['category']
 )
 
-@router.post('/create', response_model = CategoryDisplay)
+@router.post('/', response_model = CategoryDisplay)
 def create(request: CategoryBase, db: Session = Depends(get_db)):
     return db_category.create(db, request)
 
-@router.put('/update/{id}', response_model = CategoryDisplay)
+@router.put('/{id}', response_model = CategoryDisplay)
 def update(request: CategoryBase, db: Session = Depends(get_db)):
     return db_category.update(db, request)
 
-@router.get('/all', response_model= List[CategoryDisplay])
-def categories(db: Session = Depends(get_db)):
+@router.get('/', response_model= List[CategoryDisplay])
+def get_list(db: Session = Depends(get_db)):
     return db_category.get_all(db)
 
-@router.get('/item/{id}')#, response_model= CategoryDisplay)
+@router.get('/{id}', response_model= CategoryDisplay)
 def get_item(id: int, db: Session = Depends(get_db)):
     return db_category.get_item(id, db)
 
-@router.delete('/delete/{id}')
+@router.delete('/{id}')
 def delete(id: int, db: Session = Depends(get_db)):
     return db_category.delete(id, db)
 
