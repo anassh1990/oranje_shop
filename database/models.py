@@ -29,6 +29,7 @@ class DbProduct(Base):
     rate = Column(Float)
     price = Column(Float)
     quantity = Column(Integer)
+    location = Column(String, default = 'Unknown')
     status = Column(Integer) # 0:initiated, 1:approved by admin, 2:rejected by admin, 3:soldout
     is_activate = Column(Boolean) #True: activate to show, False: not activate to show
     creation_timestamp = Column(DateTime)

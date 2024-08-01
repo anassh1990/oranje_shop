@@ -4,11 +4,12 @@ from routers.schemas import ProductBase, ProductDisplay, UserAuth
 from sqlalchemy.orm import Session
 from database.database import get_db
 from database import db_product
-from typing import List
+from typing import List, Optional
 import string
 import random
 from auth.oauth2 import get_current_user
 from fastapi_pagination import Page
+from database import models
 
 router = APIRouter(
     prefix='/product',
@@ -43,3 +44,17 @@ def upload_image(image: UploadFile = File(...), current_user: UserAuth = Depends
         shutil.copyfileobj(image.file, buffer)
     
     return {'filename': path}
+
+@router.get("/search", response_model=List[ProductDisplay])
+def search_products(category: Optional[str] = None, keyword: Optional[str] = None, location: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(models.DbProduct)
+    
+    if category:
+        query = query.join(models.DbCategory).filter(models.DbCategory.name == category)
+    if keyword:
+        query = query.filter(models.DbProduct.name.contains(keyword) | models.DbProduct.description.contains(keyword))
+    if location:
+        query = query.filter(models.DbProduct.location == location)
+    
+    products = query.all()
+    return products
