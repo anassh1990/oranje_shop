@@ -1,8 +1,13 @@
 from fastapi import HTTPException, status
-from routers.schemas import ProductBase
+from routers.schemas import ProductBase, UserBase
 from sqlalchemy.orm.session import Session
 import datetime
 from database.models import DbProduct
+
+
+def log(tag = '', message = ''):
+    with open('log.txt', 'a+') as log:
+        log.write(f"{tag}: {message}\n")
 
 def create(db: Session, request: ProductBase):
     new_product = DbProduct(
@@ -30,6 +35,7 @@ def get_all(db: Session):
 def delete(id: int, db: Session):
     product = db.query(DbProduct).filter(DbProduct.id == id).first()
     if not product:
+        log(f"{id}", f"HTTP_404_NOT_FOUND - Product with id {id} was not found.")
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = f'Product with id {id} was not found.')
     #db.delete(product)
     product.is_activate = False

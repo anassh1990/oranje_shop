@@ -1,0 +1,11 @@
+3: 404
+3: 404 User with id 3 not found
+3: HTTP_404_NOT_FOUND
+2: HTTP_403_FORBIDDEN -Unauthorized profile update attempt!
+8: HTTP_404_NOT_FOUND
+8: HTTP_404_NOT_FOUND - Product with id 8 was not found.
+3: HTTP_404_NOT_FOUND
+3: HTTP_404_NOT_FOUND - User with id 3 not found
+2: HTTP_403_FORBIDDEN - Unauthorized profile update attempt!
+5: HTTP_404_NOT_FOUND - User with id 5 not found
+9: HTTP_404_NOT_FOUND - Product with id 9 was not found.

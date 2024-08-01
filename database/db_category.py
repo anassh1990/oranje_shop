@@ -5,6 +5,7 @@ from sqlalchemy.orm.session import Session
 import datetime
 from database.models import DbCategory, DbProduct
 
+
 def create(db: Session, request: CategoryBase):
     new_category = DbCategory(
         name = request.name,

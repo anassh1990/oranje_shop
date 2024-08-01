@@ -6,6 +6,7 @@ from auth import authentication
 from fastapi.staticfiles import StaticFiles
 from auth import authentication
 
+
 app = FastAPI()
 app.include_router(category.router)
 app.include_router(product.router)
