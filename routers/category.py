@@ -1,7 +1,8 @@
 import shutil
 from typing import List
 from fastapi import APIRouter, Depends, File, UploadFile
-from routers.schemas import CategoryBase, CategoryDisplay
+from auth.oauth2 import get_current_user
+from routers.schemas import CategoryBase, CategoryDisplay, UserAuth
 from sqlalchemy.orm import Session
 from database.database import get_db
 from database import db_category
@@ -14,11 +15,11 @@ router = APIRouter(
 )
 
 @router.post('/', response_model = CategoryDisplay)
-def create(request: CategoryBase, db: Session = Depends(get_db)):
+def create(request: CategoryBase, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
     return db_category.create(db, request)
 
 @router.put('/{id}', response_model = CategoryDisplay)
-def update(request: CategoryBase, db: Session = Depends(get_db)):
+def update(request: CategoryBase, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
     return db_category.update(db, request)
 
 @router.get('/', response_model= List[CategoryDisplay])
@@ -30,11 +31,11 @@ def get_item(id: int, db: Session = Depends(get_db)):
     return db_category.get_item(id, db)
 
 @router.delete('/{id}')
-def delete(id: int, db: Session = Depends(get_db)):
+def delete(id: int, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
     return db_category.delete(id, db)
 
 @router.post('/image')
-def upload_image(image: UploadFile = File(...)):
+def upload_image(image: UploadFile = File(...), current_user: UserAuth = Depends(get_current_user)):
     letter = string.ascii_letters
     rand_str = ''.join(random.choice(letter) for i in range(6))
     new = f'_{rand_str}.'

@@ -29,7 +29,7 @@ def get_item(id: int, db: Session = Depends(get_db)):
     return db_product.get_item(id, db)
 
 @router.delete('/{id}')
-def delete(id: int, db: Session = Depends(get_db)):
+def delete(id: int, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
     return db_product.delete(id, db)
 
 @router.post('/image')
@@ -45,16 +45,16 @@ def upload_image(image: UploadFile = File(...), current_user: UserAuth = Depends
     
     return {'filename': path}
 
-@router.get("/search", response_model=List[ProductDisplay])
+@router.get("/aaa")#, response_model=List[ProductDisplay])
 def search_products(category: Optional[str] = None, keyword: Optional[str] = None, location: Optional[str] = None, db: Session = Depends(get_db)):
     query = db.query(models.DbProduct)
     
-    if category:
-        query = query.join(models.DbCategory).filter(models.DbCategory.name == category)
-    if keyword:
-        query = query.filter(models.DbProduct.name.contains(keyword) | models.DbProduct.description.contains(keyword))
-    if location:
-        query = query.filter(models.DbProduct.location == location)
+    # if category:
+    #     query = query.join(models.DbCategory).filter(models.DbCategory.name == category)
+    # if keyword:
+    #     query = query.filter(models.DbProduct.name.contains(keyword) | models.DbProduct.description.contains(keyword))
+    # if location:
+    #     query = query.filter(models.DbProduct.location == location)
     
     products = query.all()
     return products

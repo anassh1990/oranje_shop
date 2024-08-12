@@ -12,15 +12,15 @@ router = APIRouter(
     tags=['order']
 )
 
-@router.post('')
+@router.post('', response_model = OrderDisplay)
 def create_order(request: OrderBase, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
     return db_order.create(db, request, current_user.id)
 
-@router.get('/',response_model= Page[OrderDisplay])
+@router.get('/admin/',response_model= Page[OrderDisplay])
 async def get_orders_list(db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)) -> Page[OrderDisplay]:
-    return db_order.get_all(db)
+    return db_order.get_all(db, current_user.id)
 
-@router.get('/user/',response_model= Page[OrderDisplay])
+@router.get('/',response_model= Page[OrderDisplay])
 async def get_user_orders(db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)) -> Page[OrderDisplay]:
     return db_order.get_user_orders(current_user.id, db)
 

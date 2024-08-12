@@ -24,7 +24,7 @@ def create_invoice(request: InvoiceBase, db: Session = Depends(get_db), current_
 async def get_invoices_list(db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user))-> Page[InvoiceDisplay]:
     return db_invoice.get_all(db, current_user.id)
 
-@router.get('/user/', response_model= Page[InvoiceDisplay])
+@router.get('/', response_model= Page[InvoiceDisplay])
 async def get_user_invoices(db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user))-> Page[InvoiceDisplay]:
     return db_invoice.get_user_invoices(db, current_user.id)
 

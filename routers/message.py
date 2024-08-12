@@ -24,7 +24,7 @@ def create_message(request: MessageBase, db: Session = Depends(get_db), current_
 async def get_messages_list(db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)) -> Page[MessageDisplay]:
     return db_message.get_all(current_user.id, db)
 
-@router.get('/user/', response_model= Page[MessageDisplay])
+@router.get('/', response_model= Page[MessageDisplay])
 async def get_user_messages(db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)) -> Page[MessageDisplay]:
     return db_message.get_user_messages(current_user.id, db)
 

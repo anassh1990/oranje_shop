@@ -4,7 +4,7 @@ from sqlalchemy import and_
 from routers.schemas import OrderBase, OrderDisplay
 from sqlalchemy.orm.session import Session
 import datetime
-from database.models import DbOrder, DbProduct
+from database.models import DbMessage, DbOrder, DbProduct, DbUser
 
 def create(db: Session, request: OrderBase, buyer_id: int):
     product = db.query(DbProduct).filter(DbProduct.id == request.product_id).first()
@@ -34,8 +34,16 @@ def create(db: Session, request: OrderBase, buyer_id: int):
     db.refresh(new_order)
     return new_order
 
-def get_all(db: Session) -> Page[OrderDisplay]:
-    return paginate(db.query(DbOrder).order_by(DbOrder.creation_timestamp).all())
+def get_all(db: Session, user_id: int) -> Page[OrderDisplay]:
+    try:
+        user = db.query(DbUser).filter(DbUser.id == user_id).first()
+        if user.is_admin:
+            return paginate(db.query(DbOrder).order_by(DbOrder.creation_timestamp).all())
+        else:
+            raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f'User with id {user_id} is not an admin, so you can not reach this content.')
+    except:
+            raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f'User with id {user_id} is not an admin, so you can not reach this content.')
+
 
 def get_user_orders(id: int, db: Session) -> Page[OrderDisplay]:
     try:
