@@ -7,4 +7,5 @@ aiofiles
 passlib
 bcrypt
 python-jose
+fastapi-pagination
 
